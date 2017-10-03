@@ -111,6 +111,8 @@ def compute_venn2_colors(set_colors):
     '''
     ccv = ColorConverter()
     base_colors = [np.array(ccv.to_rgb(c)) for c in set_colors]
+    if len(base_colors) > 2:
+        return (base_colors[0], base_colors[1], base_colors[2])
     return (base_colors[0], base_colors[1], mix_colors(base_colors[0], base_colors[1]))
 
 
@@ -191,8 +193,8 @@ def venn2(subsets, set_labels=('A', 'B'), set_colors=('r', 'g'), alpha=0.4, norm
        (10, 01, 11)
 
     ``set_labels`` parameter is a list of two strings - set labels. Set it to None to disable set labels.
-    The ``set_colors`` parameter should be a list of two elements, specifying the "base colors" of the two circles.
-    The color of circle intersection will be computed based on those.
+    The ``set_colors`` parameter should be a list of two or three elements, specifying the "base colors" of the circles.
+    The color of circle intersection will be computed based on the first 2 set colors unless a third has been specified in which case the intersection will be of the third set color.
 
     The ``normalize_to`` parameter specifies the total (on-axes) area of the circles to be drawn. Sometimes tuning it (together
     with the overall fiture size) may be useful to fit the text labels better.

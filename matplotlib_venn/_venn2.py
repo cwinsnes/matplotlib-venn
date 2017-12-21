@@ -182,7 +182,8 @@ def venn2_circles(subsets, normalize_to=1.0, alpha=1.0, color='black', linestyle
     return result
 
 
-def venn2(subsets, set_labels=('A', 'B'), set_colors=('r', 'g'), alpha=0.4, normalize_to=1.0, ax=None, subset_label_formatter=None):
+def venn2(subsets, set_labels=('A', 'B'), set_colors=('r', 'g'), alpha=0.4, normalize_to=1.0, ax=None,
+          subset_label_formatter=str, subset_label_fontargs={}):
     '''Plots a 2-set area-weighted Venn diagram.
     The subsets parameter can be one of the following:
      - A list (or a tuple) containing two set objects.
@@ -193,6 +194,7 @@ def venn2(subsets, set_labels=('A', 'B'), set_colors=('r', 'g'), alpha=0.4, norm
        (10, 01, 11)
 
     ``set_labels`` parameter is a list of two strings - set labels. Set it to None to disable set labels.
+
     The ``set_colors`` parameter should be a list of two or three elements, specifying the "base colors" of the circles.
     The color of circle intersection will be computed based on the first 2 set colors unless a third has been specified in which case the intersection will be of the third set color.
 
@@ -205,6 +207,12 @@ def venn2(subsets, set_labels=('A', 'B'), set_colors=('r', 'g'), alpha=0.4, norm
 
     The ``subset_label_formatter`` parameter is a function that can be passed to format the labels
     that describe the size of each subset.
+    This defaults to str.
+
+    The ``subset_label_fontargs`` parameter specifies what font arguments should be used for the subset labels.
+    This should be passed as a dict containing each argument as a key-value pair.
+    Example subset_label_fontargs={'fontname': 'Arial'}.
+    See matplotlibs font arguments for more information about which arguments can be passed.
 
     >>> from matplotlib_venn import *
     >>> v = venn2(subsets={'10': 1, '01': 1, '11': 1}, set_labels = ('A', 'B'))
@@ -225,9 +233,6 @@ def venn2(subsets, set_labels=('A', 'B'), set_colors=('r', 'g'), alpha=0.4, norm
     elif len(subsets) == 2:
         subsets = compute_venn2_subsets(*subsets)
 
-    if subset_label_formatter is None:
-        subset_label_formatter = str
-
     areas = compute_venn2_areas(subsets, normalize_to)
     centers, radii = solve_venn2_circles(areas)
     regions = compute_venn2_regions(centers, radii)
@@ -246,7 +251,7 @@ def venn2(subsets, set_labels=('A', 'B'), set_colors=('r', 'g'), alpha=0.4, norm
             p.set_alpha(alpha)
             ax.add_patch(p)
     label_positions = [r.label_position() for r in regions]
-    subset_labels = [ax.text(lbl[0], lbl[1], subset_label_formatter(s), va='center', ha='center') if lbl is not None else None for (lbl, s) in zip(label_positions, subsets)]
+    subset_labels = [ax.text(lbl[0], lbl[1], subset_label_formatter(s), va='center', ha='center', **subset_label_fontargs) if lbl is not None else None for (lbl, s) in zip(label_positions, subsets)]
 
     # Position set labels
     if set_labels is not None:

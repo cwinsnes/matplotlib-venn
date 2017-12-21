@@ -7,6 +7,10 @@ Venn diagram plotting routines for Python/Matplotlib
 
 Routines for plotting area-weighted two- and three-circle venn diagrams.
 
+NOTE:
+All the information below is for the original repo.
+This version of matplotlib_venn must be installed manually but allows for specification of the middle color in venn2.
+
 Installation
 ------------
 
